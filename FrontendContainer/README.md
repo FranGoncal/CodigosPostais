@@ -7,15 +7,15 @@ Exemplo de <oTeuRegistry> registocodigopostal.azurecr.io
 NOTA: É necessário levantar primeiro o backend para descobrir o IP ou FQDN desse container, sendo necessária a substituição de "<FQDN>" na linha 57 do index.html
 ```
 
-## Construir Imagem:
+## 1-Construir Imagem:
 ```sh
     docker build -t frontend-codigos:1.0 .
 ```
-## Testar Imagem Localmente:
+## (Opcional)-Testar Imagem Localmente:
 ```sh
     docker run -p 8081:80 frontend-codigos:1.0
 ```
-## Disponibilizar no Azure Registry:
+## 2-Disponibilizar no Azure Registry:
 ```sh
     docker login <oTeuRegistry>
 
@@ -24,7 +24,7 @@ NOTA: É necessário levantar primeiro o backend para descobrir o IP ou FQDN des
     docker push <oTeuRegistry>/frontend-codigos:1.0
 ```
 
-## Aceder ao Serviço:
+## 3-Aceder ao Serviço:
 ```sh
     http://<IP>/
     ou
