@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta de Código Postal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+    }
+    #resultado {
+      margin-top: 20px;
+      background-color: #f0f0f0;
+      padding: 15px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Consulta de Código Postal</h1>
+  <form id="form">
+    <label for="num">Número:</label>
+    <input type="text" id="num" name="num_cod_postal" required />
+
+    <label for="ext">Extensão:</label>
+    <input type="text" id="ext" name="ext_cod_postal" required />
+
+    <button type="submit">Consultar</button>
+  </form>
+
+  <div id="resultado"></div>
+
+  <script>
+    document.getElementById('form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+  
+      const num = document.getElementById('num').value;
+      const ext = document.getElementById('ext').value;
+      const resEl = document.getElementById('resultado');
+  
+      // FQDN do backend no Azure (não localhost)
+      const url = `http://<FQDN>/?num_cod_postal=${num}&ext_cod_postal=${ext}`;
+  
+      try {
+        const resposta = await fetch(url);
+        const dados = await resposta.json();
+  
+        resEl.innerHTML = '';
+  
+        if (dados.result === 'ok') {
+          console.error("xega-lhe");
+          resEl.innerHTML = `
+            <p><strong>Designação Postal:</strong> ${dados.desig_postal}</p>
+            <p><strong>Localidade:</strong> ${dados.nome_localidade || '---'}</p>
+            <p><strong>Rua:</strong> ${dados.nome_arteria || '---'}</p>
+            <p><strong>Código Postal:</strong> ${dados.num_cod_postal}-${dados.ext_cod_postal}</p>
+          `;
+        } else {
+          resEl.innerHTML = '<p style="color:red;">Código postal não encontrado.</p>';
+          console.error(err);
+          console.error(dados);
+        }
+  
+      } catch (err) {
+        resEl.innerHTML = '<p style="color:red;">Erro ao contactar o servidor.</p>';
+        console.error(err); // ← aqui está o fix
+      }
+    });
+  </script>
+</body>
+</html>
